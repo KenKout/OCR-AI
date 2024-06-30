@@ -42,8 +42,8 @@ def release_account(data_id, collection):
     return
 
 
-def lock_account(data_id, collection):
-    collection.update_one({"_id": data_id}, {"$set": {"use": 50}})
+def lock_account(data_id, collection, use_limit=50):
+    collection.update_one({"_id": data_id}, {"$set": {"use": use_limit}})
     return
 
 
@@ -144,7 +144,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
                     continue
                 if 'Quota' in data_return:
                     print("Page: " + str(image_index) + ' - ' + "Quota exceeded")
-                    lock_account(api_key_id, google_api_collection)
+                    lock_account(api_key_id, google_api_collection, use_limit=1500)
                     release_account(api_key_id, google_api_collection)
                     time.sleep(30)
                     continue

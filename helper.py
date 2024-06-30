@@ -26,7 +26,11 @@ def split_pdf_into_images(file_path):
     images = []
     for i in range(pdf.page_count):
         page = pdf[i]
-        pixmap = page.get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
+        # Check if the page is blank
+        if page.get_text() == '':
+            pixmap = page.get_pixmap(matrix=fitz.Matrix(1, 1))
+        else:
+            pixmap = page.get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
         # Convert the pixmap to a PIL Image
         img = Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples)
         # Convert the PIL Image to bytes and append to the list
