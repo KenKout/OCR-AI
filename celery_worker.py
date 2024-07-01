@@ -159,7 +159,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
                         print("Page: " + str(image_index) + ' - ' + "Recitation" + ' - Switch to COZE')
                         # If recitation more than 3 times, switch to COZE
                         data_return = process_image_task(image, pdf_id, image_index, task_id, MODE='COZE')
-                        return
+                        return data_return
                     else:
                         continue
                 struct_result = {"pdf": pdf_id, "image": [], "text": data_return, "page": image_index, "task_id": task_id}
@@ -167,7 +167,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
                 print("Page: " + str(image_index) + ' - ' + "Done!")
                 release_account(api_key_id, google_api_collection)
                 time.sleep(random.randint(5, 10))
-                break
+                return data_return
             except:
                 print("Page: " + str(image_index) + ' - ' + "Error in sending image data to chat")
                 print(traceback.format_exc())
