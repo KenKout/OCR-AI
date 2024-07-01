@@ -153,15 +153,14 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
                     recitation += 1
                     if recitation < 3:
                         print("Page: " + str(image_index) + ' - ' + "Recitation" + ' - Retry')
-                    release_account(api_key_id, google_api_collection)
-                    time.sleep(15)
-                    if recitation > 3:
+                        release_account(api_key_id, google_api_collection)
+                        time.sleep(15)
+                        continue
+                    else:
                         print("Page: " + str(image_index) + ' - ' + "Recitation" + ' - Switch to COZE')
                         # If recitation more than 3 times, switch to COZE
                         data_return = process_image_task(image, pdf_id, image_index, task_id, MODE='COZE')
                         return data_return
-                    else:
-                        continue
                 struct_result = {"pdf": pdf_id, "image": [], "text": data_return, "page": image_index, "task_id": task_id}
                 result_collection.insert_one(struct_result)
                 print("Page: " + str(image_index) + ' - ' + "Done!")
