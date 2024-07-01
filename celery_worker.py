@@ -14,7 +14,8 @@ import traceback
 REDIS_HOST = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 celery_app = Celery('celery_worker', broker=REDIS_HOST, backend=REDIS_HOST)
 MODE = os.getenv('MODE', 'COZE')
-
+COZE_LIMIT = os.getenv('COZE_LIMIT', 15)
+GOOGLE_LIMIT = os.getenv('GOOGLE_LIMIT', 1500)
 
 def find_account(collection, use_limit=50):
     account = collection.find_one({"use": {"$lt": use_limit}, "lock": 0})
@@ -58,7 +59,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
             try:
                 pdf_collection, result_collection, account_collection, google_api_collection = connect()
                 headers = headers_global
-                cookie, account_id = find_account(account_collection)
+                cookie, account_id = find_account(account_collection, use_limit=COZE_LIMIT)
                 headers["Cookie"] = cookie
                 if not cookie:
                     print("No account available")
@@ -104,7 +105,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
                 if 'Quota' in data_return or 'Banned' in data_return:
                     print("Page: " + str(image_index) + ' - ' + "Account: " + str(account_id) + ' - ' + "Quota exceeded")
                     release_account(account_id, account_collection)
-                    lock_account(account_id, account_collection)
+                    lock_account(account_id, account_collection, use_limit=COZE_LIMIT)
                     time.sleep(random.randint(10, 30))
                     continue
                 print("Page: " + str(image_index) + ' - ' + "Done!")
@@ -124,7 +125,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
             print('Page: ' + str(image_index) + ' - ' + 'Processing image')
             try:
                 pdf_collection, result_collection, account_collection, google_api_collection = connect()
-                api_key, api_key_id = find_account(google_api_collection, use_limit=1500)
+                api_key, api_key_id = find_account(google_api_collection, use_limit=GOOGLE_LIMIT)
                 print("Page: " + str(image_index) + ' - ' + "Got key: " + str(api_key) + ' - ' + "Key ID: " + str(api_key_id))
             except Exception as e:
                 print("Page: " + str(image_index) + ' - ' + "Error in getting account - " + str(e))
@@ -144,7 +145,7 @@ def process_image_task(image, pdf_id, image_index, task_id, MODE, type_task='LaT
                     continue
                 if 'Quota' in data_return:
                     print("Page: " + str(image_index) + ' - ' + "Quota exceeded")
-                    lock_account(api_key_id, google_api_collection, use_limit=1500)
+                    lock_account(api_key_id, google_api_collection, use_limit=GOOGLE_LIMIT)
                     release_account(api_key_id, google_api_collection)
                     time.sleep(30)
                     continue
