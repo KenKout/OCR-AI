@@ -7,4 +7,5 @@ pymongo
 celery
 redis
 PyMuPDF
+uvicorn
 git+https://github.com/KenKout/streamlit-paste-button.git#egg=streamlit-paste-button
