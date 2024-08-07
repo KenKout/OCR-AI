@@ -21,7 +21,7 @@ SAFETY_SETTINGS = [
 ]
 
 GENERATE_CONFIG = {
-    "temperature": 1,
+    "temperature": 0.1,
     "maxOutputTokens": 8096,
     "topP": 0.95,
 }
