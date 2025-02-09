@@ -1,0 +1,24 @@
+# API Libraries
+fastapi
+python-dotenv
+uvicorn[standard]
+python-multipart
+pydantic
+
+# PDF Libraries
+PyMuPDF
+
+# Frontend Libraries
+streamlit
+git+https://github.com/KenKout/streamlit-paste-button.git#egg=streamlit-paste-button
+
+# AI Libraries
+openai
+tiktoken
+
+# Database Libraries
+motor
+pymongo
+
+# Other Libraries
+loguru
