@@ -44,11 +44,32 @@ if __name__ == '__main__':
         image = None
         streamlit.text('\n')
     # Option to convert the image to LaTeX or Text
-    option = streamlit.radio('Select the type of conversion', ['LaTeX', 'Custom'])
-    streamlit.write(f"You selected: `{option}`", )
-    if option == 'Custom':
+    option = streamlit.radio('Select the type of conversion', ['LaTeX', 'Markdown', 'Custom'])
+    streamlit.write(f"You selected: `{option}`")
+    if option == 'Markdown':
+        user_instruction = "Convert the image to Markdown format."
+        system_instruction = """
+
+<instruction>
+Your job is to OCR the image and convert it to Markdown format.
+</instruction>
+
+<example_text_output>
+```md
+**Hello World**
+```
+</example_text_output>
+
+<example_normal_text_output>
+```md
+The quick brown fox jumps over the lazy dog.
+```
+</example_normal_text_output>
+"""
+
+    elif option == 'Custom':
         # Input text with multiple lines, with 10 as the default number of lines
-        user_instruction = streamlit.text_area('Enter user instruction', value='', height=300)
+        user_instruction = streamlit.text_area('Enter user instruction', value='Convert the image to LaTeX format.', height=300)
         system_instruction = streamlit.text_area('Enter system instruction', value=SYSTEM_PROMPT, height=300)
     else:
         user_instruction = None
